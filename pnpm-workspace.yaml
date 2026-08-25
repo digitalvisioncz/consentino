@@ -1,0 +1,7 @@
+packages:
+  - docs
+  - packages/*
+allowBuilds:
+  esbuild: true
+minimumReleaseAgeExclude:
+  - eslint@10.9.1

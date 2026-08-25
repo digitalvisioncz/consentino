@@ -1,0 +1,10 @@
+$schema: './cache/schemas/toolchains.json'
+
+javascript:
+  packageManager: 'pnpm'
+
+node:
+  version: '24.19.0'
+
+pnpm:
+  version: '11.23.0'

@@ -1,0 +1,48 @@
+$schema: './.moon/cache/schemas/project.json'
+
+language: 'typescript'
+layer: 'tool'
+
+tasks:
+  lint:
+    script: 'eslint . && stylelint "**/*.{css,scss}" --allow-empty-input'
+    inputs:
+      - '/AGENTS.md'
+      - '/docs/**/*'
+      - '/packages/**/*'
+      - '/eslint.config.js'
+      - '/stylelint.config.js'
+    options:
+      runInCI: 'always'
+
+  typecheck:
+    command: 'tsc -b'
+    inputs:
+      - '/tsconfig.json'
+      - '/docs/**/*.ts'
+      - '/packages/**/*.ts'
+    options:
+      runInCI: 'always'
+
+  test:
+    command: 'vp test run --passWithNoTests'
+    inputs:
+      - '/vite.config.ts'
+      - '/docs/**/*.test.{ts,tsx}'
+      - '/packages/**/*.test.{ts,tsx}'
+    options:
+      runInCI: 'always'
+
+  version:
+    command: 'changeset version'
+    options:
+      cache: false
+      runInCI: false
+
+  release:
+    command: 'changeset publish'
+    env:
+      NPM_CONFIG_PROVENANCE: 'true'
+    options:
+      cache: false
+      runInCI: false

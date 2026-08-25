@@ -1,0 +1,23 @@
+{
+  "name": "consentino",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Framework-agnostic cookie consent web components.",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@11.23.0",
+  "engines": {
+    "node": ">=24.11.0"
+  },
+  "devDependencies": {
+    "@changesets/cli": "3.0.1",
+    "@dvdevcz/eslint": "0.4.1",
+    "@dvdevcz/stylelint": "0.1.1",
+    "@moonrepo/cli": "2.5.3",
+    "@types/node": "24.13.3",
+    "eslint": "10.9.1",
+    "stylelint": "17.14.1",
+    "typescript": "7.0.2",
+    "vite-plus": "0.3.0"
+  }
+}
