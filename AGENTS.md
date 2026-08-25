@@ -11,12 +11,12 @@ Moon is the canonical task interface. Do not add root `pnpm dev`/`build`/`lint`/
 - Development: `moon run docs:dev`.
 - Build all projects: `moon run :build`.
 - Typecheck: `moon run root:typecheck`.
-- Lint: `moon run root:lint`. Auto-fix the underlying tools with `pnpm exec eslint . --fix` and `pnpm exec stylelint "**/*.{css,scss}" --fix --allow-empty-input`.
+- Lint: `moon run root:lint`. Auto-fix the underlying tools with `pnpm exec oxlint . --fix`, `pnpm exec oxfmt "**/*.{js,jsx,ts,tsx,mjs,cjs,mts}" "*.{js,jsx,ts,tsx,mjs,cjs,mts}"`, and `pnpm exec stylelint "**/*.{css,scss}" --fix --allow-empty-input`.
 - Node tests: `moon run root:test`. Test imports: `import {describe, it, expect} from "vite-plus/test"`.
 - Package inspection: `moon run browser:pack`.
 - CI task graph: `moon ci`.
-- Formatting is owned by eslint's `@stylistic/*` rules; `eslint --fix` is the formatter.
-- Do not use `vp lint`, `vp fmt`, oxlint, or oxfmt.
+- JavaScript and TypeScript formatting is owned by Oxfmt; CSS and SCSS formatting remains owned by Stylelint.
+- Do not use `vp lint` or `vp fmt`; invoke the pinned Oxlint and Oxfmt packages directly.
 - Root `vite.config.ts` only configures the test runner; `vite.config.js` is a gitignored compiled artifact — never edit or commit it.
 
 ## Handling test/lint/ts failures

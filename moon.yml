@@ -5,13 +5,15 @@ layer: 'tool'
 
 tasks:
   lint:
-    script: 'eslint . && stylelint "**/*.{css,scss}" --allow-empty-input'
+    script: 'oxlint . && oxfmt "**/*.{js,jsx,ts,tsx,mjs,cjs,mts}" "*.{js,jsx,ts,tsx,mjs,cjs,mts}" --check && stylelint "**/*.{css,scss}" --allow-empty-input'
     inputs:
       - '/AGENTS.md'
-      - '/docs/**/*'
-      - '/packages/**/*'
-      - '/eslint.config.js'
+      - '/docs/**/*.{js,jsx,ts,tsx,mjs,cjs,mts,css,scss}'
+      - '/packages/**/*.{js,jsx,ts,tsx,mjs,cjs,mts,css,scss}'
+      - '/.oxfmtrc.json'
+      - '/.oxlintrc.json'
       - '/stylelint.config.js'
+      - '/vite.config.ts'
     options:
       runInCI: 'always'
 

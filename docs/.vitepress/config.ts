@@ -5,8 +5,14 @@ export default defineConfig({
     description: 'Framework-agnostic cookie consent web components.',
     srcExclude: ['superpowers/**'],
     themeConfig: {
-        nav: [{link: '/', text: 'Overview'}, {link: '/architecture', text: 'Architecture'}],
-        sidebar: [{link: '/', text: 'Overview'}, {link: '/architecture', text: 'Architecture'}],
+        nav: [
+            {link: '/', text: 'Overview'},
+            {link: '/architecture', text: 'Architecture'},
+        ],
+        sidebar: [
+            {link: '/', text: 'Overview'},
+            {link: '/architecture', text: 'Architecture'},
+        ],
     },
     title: 'Consentino',
 });
