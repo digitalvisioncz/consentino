@@ -15,7 +15,13 @@ const input = await new Promise<string>((resolve, reject) => {
     process.stdin.on('error', reject);
 });
 const packed = JSON.parse(input) as unknown;
-const files = isRecord(packed) ? packed.files : undefined;
+
+if (Array.isArray(packed) && packed.length !== 1) {
+    throw new Error('pnpm pack returned an unexpected payload.');
+}
+
+const payload = Array.isArray(packed) ? packed[0] : packed;
+const files = isRecord(payload) ? payload.files : undefined;
 
 if (!Array.isArray(files)) {
     throw new Error('pnpm pack returned an unexpected payload.');

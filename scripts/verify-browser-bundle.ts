@@ -28,18 +28,29 @@ if (integration !== 'cookiebot' && integration !== 'cookieyes') {
 }
 
 const verify = async (filename: 'browser.js' | 'browser.mjs'): Promise<void> => {
-    const source = await readFile(resolve('dist', filename), 'utf8');
-    const browser = new Window({url: 'https://example.com'}) as TestWindow;
-    const calls: TrackingCall[] = [];
+const path = resolve('dist', filename);
+const source = await readFile(path, 'utf8');
+const browser = new Window({url: 'https://example.com'}) as TestWindow;
+const calls: TrackingCall[] = [];
 
-    browser.wf = {
-        allowUserTracking: options => calls.push({activate: options?.activate, choice: 'allow'}),
-        denyUserTracking: () => calls.push({choice: 'deny'}),
-        ready: listener => listener(),
-    };
+browser.wf = {
+    allowUserTracking: options => calls.push({activate: options?.activate, choice: 'allow'}),
+    denyUserTracking: () => calls.push({choice: 'deny'}),
+    ready: listener => listener(),
+};
 
-    browser.eval(source);
+const globals = globalThis as Record<string, unknown>;
+globals.window = browser;
+globals.document = browser.document;
+globals.Event = browser.Event;
+globals.CustomEvent = browser.CustomEvent;
+globals.wf = browser.wf;
 
+if (filename === 'browser.mjs') {
+    await import(new URL(`file://${path}`).href);
+} else {
+    new Function(source)();
+}
     if (calls.at(-1)?.choice !== 'deny') {
         throw new Error(`${integration} ${filename}: bundle did not default Webflow tracking to deny.`);
     }
