@@ -2,4 +2,6 @@ import {createWebflowConsentBridge} from '@consentino/core';
 
 import {registerCookieYesConsent} from './cookieyes';
 
-registerCookieYesConsent(document, createWebflowConsentBridge(), undefined, window);
+if (typeof document !== 'undefined' && typeof window !== 'undefined') {
+    registerCookieYesConsent(document, createWebflowConsentBridge(), undefined, window);
+}
