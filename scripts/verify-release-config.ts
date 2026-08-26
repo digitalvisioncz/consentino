@@ -44,14 +44,14 @@ const release = config.packages?.['.'];
 
 if (
     release?.['release-type'] !== 'node' ||
-    release['initial-version'] !== '0.1.0' ||
-    release['bump-minor-pre-major'] !== true ||
-    release['include-component-in-tag'] !== false
+    release?.['initial-version'] !== '0.1.0' ||
+    release?.['bump-minor-pre-major'] !== true ||
+    release?.['include-component-in-tag'] !== false
 ) {
     throw new Error('Root Release Please component does not match the shared-version contract.');
 }
 
-const extraFiles = release['extra-files'] ?? [];
+const extraFiles = release?.['extra-files'] ?? [];
 const expectedExtraFiles = ['packages/cookiebot/package.json', 'packages/cookieyes/package.json'];
 
 const actualExtraFiles = extraFiles

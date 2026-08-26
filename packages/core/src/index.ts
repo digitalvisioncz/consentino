@@ -33,7 +33,9 @@ const createBrowserEnvironment = (): ConsentBridgeEnvironment => {
             listener();
         },
         onWindowLoad: listener => {
-            if (typeof window === 'undefined') return;
+            if (typeof window === 'undefined' || typeof document === 'undefined') {
+                return;
+            }
 
             if (document.readyState === 'complete') {
                 listener();
