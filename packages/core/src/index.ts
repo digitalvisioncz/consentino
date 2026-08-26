@@ -50,11 +50,11 @@ const createBrowserEnvironment = (): ConsentBridgeEnvironment => {
 
             if (error === undefined) {
                 console.warn(formatted);
+
+                return;
             }
 
-            if (error) {
-                console.warn(formatted, error);
-            }
+            console.warn(formatted, error);
         },
     };
 };
