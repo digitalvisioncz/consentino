@@ -63,8 +63,10 @@ if (JSON.stringify(actualExtraFiles) !== JSON.stringify(expectedExtraFiles)) {
     throw new Error(`Release Please version targets do not match: ${actualExtraFiles.join(', ')}.`);
 }
 
-if (Object.keys(manifest).length !== 0) {
-    throw new Error('The first release must start from an empty Release Please manifest.');
+const manifestKeys = Object.keys(manifest);
+
+if (manifestKeys.length > 0 && (manifestKeys.length !== 1 || manifestKeys[0] !== '.' || manifest['.'] !== versions[0])) {
+    throw new Error(`Release Please manifest must track the shared version ${versions[0]}: ${JSON.stringify(manifest)}.`);
 }
 
 const repositoryUrl = 'git+https://github.com/digitalvisioncz/consentino.git';
