@@ -4,21 +4,21 @@ language: 'typescript'
 layer: 'library'
 
 tasks:
-  build:
-    script: 'esbuild src/index.ts --bundle --format=iife --minify --sourcemap --outfile=dist/browser.js && esbuild src/index.ts --bundle --format=esm --minify --sourcemap --outfile=dist/browser.mjs && cp browser.d.ts dist/browser.d.ts'
-    inputs:
-      - '@group(sources)'
-      - '@group(configs)'
-      - '/packages/core/src/**/*.ts'
-    outputs:
-      - 'dist'
-    options:
-      runInCI: 'always'
+    build:
+        script: 'esbuild src/index.ts --bundle --format=iife --minify --sourcemap --outfile=dist/browser.js && esbuild src/index.ts --bundle --format=esm --minify --sourcemap --outfile=dist/browser.mjs && cp browser.d.ts dist/browser.d.ts'
+        inputs:
+            - '@group(sources)'
+            - '@group(configs)'
+            - '/packages/core/src/**/*.ts'
+        outputs:
+            - 'dist'
+        options:
+            runInCI: 'always'
 
-  pack:
-    script: 'node ../../scripts/verify-browser-bundle.ts cookiebot && pnpm pack --dry-run --json | node ../../scripts/verify-package-files.ts'
-    deps:
-      - 'build'
-    options:
-      cache: false
-      runInCI: false
+    pack:
+        script: 'node ../../scripts/verify-browser-bundle.ts cookiebot && pnpm pack --dry-run --json | node ../../scripts/verify-package-files.ts'
+        deps:
+            - 'build'
+        options:
+            cache: false
+            runInCI: true

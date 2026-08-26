@@ -47,11 +47,12 @@ const createBrowserEnvironment = (): ConsentBridgeEnvironment => {
         },
         warn: (message, error) => {
             const formatted = `[Consentino] ${message}`;
+
             if (error === undefined) {
                 console.warn(formatted);
             }
 
-            if (error instanceof Error) {
+            if (error) {
                 console.warn(formatted, error);
             }
         },
