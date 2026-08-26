@@ -1,4 +1,5 @@
 import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
 
 import {Window} from 'happy-dom';
 
@@ -44,7 +45,7 @@ const verify = async (filename: 'browser.js' | 'browser.mjs'): Promise<void> => 
     globals.CustomEvent = browser.CustomEvent;
     globals.wf = browser.wf;
 
-    await import(new URL(`file://${path}`).href);
+    await import(pathToFileURL(path).href);
     if (calls.at(-1)?.choice !== 'deny') {
         throw new Error(`${integration} ${filename}: bundle did not default Webflow tracking to deny.`);
     }
