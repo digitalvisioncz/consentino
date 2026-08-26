@@ -8,6 +8,7 @@ interface CookiebotApi {
 
 export interface CookiebotEventTarget extends EventTarget {
     Cookiebot?: CookiebotApi;
+    readonly document?: Pick<Document, 'readyState'>;
 }
 
 type Warn = (message: string) => void;
@@ -45,9 +46,17 @@ export function registerCookiebotConsent(target: CookiebotEventTarget, bridge: C
         target.addEventListener(event, publish);
     }
 
-    target.addEventListener('load', () => {
+    const reportMissingConsent = () => {
         if (!received) {
             warn('[Consentino Cookiebot] Cookiebot did not provide a consent state by window load.');
         }
-    });
+    };
+
+    if (target.document?.readyState === 'complete') {
+        reportMissingConsent();
+
+        return;
+    }
+
+    target.addEventListener('load', reportMissingConsent, {once: true});
 }

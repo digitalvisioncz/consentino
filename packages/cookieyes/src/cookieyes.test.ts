@@ -73,6 +73,17 @@ describe('registerCookieYesConsent', () => {
         registerCookieYesConsent(harness.target, harness.bridge, harness.warn, lifecycle);
 
         lifecycle.dispatchEvent(new Event('load'));
+        lifecycle.dispatchEvent(new Event('load'));
+
+        expect(harness.choices).toEqual([]);
+        expect(harness.warn).toHaveBeenCalledOnce();
+    });
+
+    it('warns immediately when registered after window load', () => {
+        const harness = createHarness();
+        const lifecycle = Object.assign(new EventTarget(), {document: {readyState: 'complete'} satisfies Pick<Document, 'readyState'>});
+
+        registerCookieYesConsent(harness.target, harness.bridge, harness.warn, lifecycle);
 
         expect(harness.choices).toEqual([]);
         expect(harness.warn).toHaveBeenCalledOnce();

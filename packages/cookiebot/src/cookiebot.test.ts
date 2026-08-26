@@ -76,6 +76,17 @@ describe('registerCookiebotConsent', () => {
         registerCookiebotConsent(harness.target, harness.bridge, harness.warn);
 
         harness.target.dispatchEvent(new Event('load'));
+        harness.target.dispatchEvent(new Event('load'));
+
+        expect(harness.choices).toEqual([]);
+        expect(harness.warn).toHaveBeenCalledOnce();
+    });
+
+    it('warns immediately when registered after window load', () => {
+        const harness = createHarness();
+        const target = Object.assign(harness.target, {document: {readyState: 'complete'} satisfies Pick<Document, 'readyState'>});
+
+        registerCookiebotConsent(target, harness.bridge, harness.warn);
 
         expect(harness.choices).toEqual([]);
         expect(harness.warn).toHaveBeenCalledOnce();

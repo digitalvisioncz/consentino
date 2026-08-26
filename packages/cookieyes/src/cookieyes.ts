@@ -2,6 +2,10 @@ import type {ConsentBridge} from '@consentino/core';
 
 type Warn = (message: string) => void;
 
+interface WindowLifecycle extends EventTarget {
+    readonly document?: Pick<Document, 'readyState'>;
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
     return typeof value === 'object' && value !== null;
 }
@@ -14,7 +18,7 @@ export const registerCookieYesConsent = (
     target: EventTarget,
     bridge: ConsentBridge,
     warn: Warn = message => console.warn(message),
-    lifecycle: EventTarget = target,
+    lifecycle: WindowLifecycle = target,
 ): void => {
     let warned = false;
     let received = false;
@@ -47,9 +51,17 @@ export const registerCookieYesConsent = (
         publish(valid && accepted.includes('analytics'), valid);
     });
 
-    lifecycle.addEventListener('load', () => {
+    const reportMissingConsent = () => {
         if (!received) {
             warn('[Consentino CookieYes] CookieYes did not provide a consent state by window load.');
         }
-    });
+    };
+
+    if (lifecycle.document?.readyState === 'complete') {
+        reportMissingConsent();
+
+        return;
+    }
+
+    lifecycle.addEventListener('load', reportMissingConsent, {once: true});
 };
