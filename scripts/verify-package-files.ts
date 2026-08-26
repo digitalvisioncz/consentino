@@ -20,7 +20,7 @@ if (Array.isArray(packed) && packed.length !== 1) {
     throw new Error('pnpm pack returned an unexpected payload.');
 }
 
-const payload = Array.isArray(packed) ? packed[0] : packed;
+const payload: unknown = Array.isArray(packed) ? packed[0] : packed;
 const files = isRecord(payload) ? payload.files : undefined;
 
 if (!Array.isArray(files)) {
