@@ -12,7 +12,7 @@ Configure Webflow to track visitors only after opt-in, then place Consentino as 
 ### Cookiebot
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@consentino/cookiebot@1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@consentino/cookiebot"></script>
 ```
 
 ### CookieYes
@@ -41,17 +41,17 @@ pnpm install
 
 Moon is the canonical task interface:
 
-| Task                      | Command                   |
-| ------------------------- | ------------------------- |
-| Run the website locally   | `moon run docs:dev`       |
-| Build all projects        | `moon run :build`         |
-| Lint                      | `moon run root:lint`      |
-| Typecheck                 | `moon run root:typecheck` |
-| Run tests                 | `moon run root:test`      |
-| Inspect Cookiebot package | `moon run cookiebot:pack` |
-| Inspect CookieYes package | `moon run cookieyes:pack` |
+| Task                        | Command                       |
+| --------------------------- | ----------------------------- |
+| Run the website locally     | `moon run docs:dev`           |
+| Build all projects          | `moon run :build`             |
+| Lint                        | `moon run root:lint`          |
+| Typecheck                   | `moon run root:typecheck`     |
+| Run tests                   | `moon run root:test`          |
+| Inspect Cookiebot package   | `moon run cookiebot:pack`     |
+| Inspect CookieYes package   | `moon run cookieyes:pack`     |
 | Check release configuration | `moon run root:release-check` |
-| Run the affected CI graph | `moon ci`                 |
+| Run the affected CI graph   | `moon ci`                     |
 
 Commit messages and pull request titles follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/).
 
