@@ -1,0 +1,207 @@
+:root {
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-synthesis: none;
+    color: #17211b;
+    background: #f3f5ee;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+a {
+    color: inherit;
+}
+
+.site-header,
+main,
+footer {
+    width: min(100% - 2rem, 72rem);
+    margin-inline: auto;
+}
+
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 1.5rem;
+}
+
+.brand {
+    font-size: 1.125rem;
+    font-weight: 750;
+    text-decoration: none;
+    letter-spacing: -.04em;
+}
+
+.status,
+.eyebrow {
+    font-size: .75rem;
+    font-weight: 700;
+    color: #526057;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+}
+
+.hero {
+    display: grid;
+    align-content: center;
+    min-height: 38rem;
+    border-block: 1px solid #d9ded4;
+}
+
+.eyebrow {
+    margin: 0 0 1.5rem;
+}
+
+h1,
+h2,
+h3,
+p {
+    margin-top: 0;
+}
+
+h1 {
+    max-width: 12ch;
+    margin-bottom: 2rem;
+    font-size: clamp(3.4rem, 9vw, 7.5rem);
+    font-weight: 650;
+    line-height: .88;
+    letter-spacing: -.075em;
+}
+
+.lede {
+    max-width: 42rem;
+    margin-bottom: 0;
+    font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+    line-height: 1.5;
+    color: #526057;
+}
+
+.integrations,
+.install {
+    padding-block: 7rem;
+}
+
+.section-heading {
+    display: flex;
+    gap: 2rem;
+    align-items: end;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+}
+
+h2 {
+    max-width: 16ch;
+    margin-bottom: 0;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -.055em;
+}
+
+.integration-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.integration-card {
+    min-height: 18rem;
+    padding: 2rem;
+    border: 1px solid #ccd3c7;
+    border-radius: 1.25rem;
+    background: rgb(255 255 255 / 45%);
+}
+
+.integration-mark {
+    display: block;
+    width: .75rem;
+    height: .75rem;
+    margin-bottom: 7rem;
+    border-radius: 50%;
+    background: #79e28e;
+    box-shadow: 0 0 0 .4rem rgb(121 226 142 / 18%);
+}
+
+h3 {
+    margin-bottom: .6rem;
+    font-size: 1.75rem;
+    letter-spacing: -.035em;
+}
+
+code {
+    font-size: .875rem;
+    color: #657168;
+}
+
+.install {
+    border-top: 1px solid #d9ded4;
+}
+
+.install h2 {
+    margin-bottom: 3rem;
+}
+
+.code-placeholder {
+    display: grid;
+    gap: .8rem;
+    max-width: 48rem;
+    padding: 1.75rem;
+    border-radius: 1rem;
+    background: #17211b;
+}
+
+.code-placeholder span {
+    width: 72%;
+    height: .65rem;
+    border-radius: 999px;
+    background: #4b5a50;
+}
+
+.code-placeholder span:nth-child(2) {
+    width: 90%;
+}
+
+.code-placeholder span:nth-child(3) {
+    width: 54%;
+}
+
+.install > p:last-child {
+    margin: 1.25rem 0 0;
+    color: #657168;
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    padding-block: 2rem;
+    border-top: 1px solid #d9ded4;
+    font-size: .875rem;
+    color: #657168;
+}
+
+@media (max-width: 42rem) {
+    .hero {
+        min-height: 32rem;
+    }
+
+    .section-heading,
+    footer {
+        flex-direction: column;
+        align-items: start;
+    }
+
+    .integration-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .integrations,
+    .install {
+        padding-block: 5rem;
+    }
+}

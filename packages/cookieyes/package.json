@@ -1,0 +1,32 @@
+{
+    "name": "@consentino/cookieyes",
+    "version": "0.1.0",
+    "description": "Sync CookieYes analytics consent with Webflow tracking.",
+    "license": "MIT",
+    "type": "module",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/digitalvisioncz/consentino.git",
+        "directory": "packages/cookieyes"
+    },
+    "files": ["dist", "README.md", "LICENSE"],
+    "browser": "./dist/browser.js",
+    "module": "./dist/browser.mjs",
+    "types": "./dist/browser.d.ts",
+    "unpkg": "./dist/browser.js",
+    "jsdelivr": "./dist/browser.js",
+    "exports": {
+        ".": {
+            "types": "./dist/browser.d.ts",
+            "import": "./dist/browser.mjs",
+            "default": "./dist/browser.mjs"
+        }
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "devDependencies": {
+        "@consentino/core": "workspace:*",
+        "esbuild": "0.28.2"
+    }
+}

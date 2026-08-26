@@ -2,8 +2,10 @@ $schema: './cache/schemas/workspace.json'
 
 projects:
   root: '.'
-  docs: 'docs'
-  browser: 'packages/browser'
+  docs: 'apps/web'
+  core: 'packages/core'
+  cookiebot: 'packages/cookiebot'
+  cookieyes: 'packages/cookieyes'
 
 vcs:
   client: 'git'

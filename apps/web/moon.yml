@@ -1,0 +1,25 @@
+$schema: '../../.moon/cache/schemas/project.json'
+
+language: 'typescript'
+layer: 'application'
+
+tasks:
+  dev:
+    command: 'astro dev'
+    options:
+      cache: false
+      persistent: true
+      runInCI: false
+
+  build:
+    command: 'astro build'
+    inputs:
+      - 'src/**/*'
+      - 'public/**/*'
+      - 'astro.config.mjs'
+      - 'tsconfig.json'
+      - 'package.json'
+    outputs:
+      - 'dist'
+    options:
+      runInCI: 'always'

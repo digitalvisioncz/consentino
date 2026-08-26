@@ -18,6 +18,7 @@ out
 # Cache
 .turbo
 .moon/cache
+.astro
 .cache
 .parcel-cache
 .eslintcache

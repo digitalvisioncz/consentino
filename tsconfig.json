@@ -15,8 +15,9 @@
     ]
   },
   "include": [
-    "docs/.vitepress/**/*.ts",
+    "apps/**/*.ts",
     "packages/**/*.ts",
+    "scripts/**/*.ts",
     "vite.config.ts"
   ]
 }
