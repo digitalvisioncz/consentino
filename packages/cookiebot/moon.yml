@@ -9,14 +9,16 @@ tasks:
         inputs:
             - '@group(sources)'
             - '@group(configs)'
+            - 'browser.d.ts'
             - '/packages/core/src/**/*.ts'
+            - '/packages/core/package.json'
         outputs:
             - 'dist'
         options:
             runInCI: 'always'
 
     pack:
-        script: 'node ../../scripts/verify-browser-bundle.ts cookiebot && pnpm pack --dry-run --json | node ../../scripts/verify-package-files.ts'
+        script: 'set -o pipefail; node ../../scripts/verify-browser-bundle.ts cookiebot && pnpm pack --dry-run --json | node ../../scripts/verify-package-files.ts'
         deps:
             - 'build'
         options:

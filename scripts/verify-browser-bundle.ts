@@ -1,11 +1,29 @@
+import {createRequire} from 'node:module';
 import {resolve} from 'node:path';
-import {pathToFileURL} from 'node:url';
+import {isDeepStrictEqual} from 'node:util';
 
 import {Window} from 'happy-dom';
+import {readFile} from 'node:fs/promises';
 
-interface TrackingCall {
-    activate?: boolean;
-    choice: 'allow' | 'deny';
+interface TrackingOptions {
+    [key: string]: unknown;
+}
+
+interface EsbuildRuntime {
+    transform(
+        source: string,
+        options: {format: 'iife'; loader: 'js'; sourcefile: string},
+    ): Promise<{
+        code: string;
+    }>;
+}
+
+type TrackingCall = {choice: 'allow'; options?: TrackingOptions} | {choice: 'deny'};
+
+interface WebflowApi {
+    allowUserTracking(options?: TrackingOptions): void;
+    denyUserTracking(): void;
+    ready(listener: () => void): void;
 }
 
 interface TestWindow extends Window {
@@ -14,11 +32,7 @@ interface TestWindow extends Window {
             statistics: boolean;
         };
     };
-    wf: {
-        allowUserTracking(options?: {activate?: boolean}): void;
-        denyUserTracking(): void;
-        ready(listener: () => void): void;
-    };
+    wf?: WebflowApi;
 }
 
 const integration = process.argv[2];
@@ -27,69 +41,194 @@ if (integration !== 'cookiebot' && integration !== 'cookieyes') {
     throw new Error('Expected integration argument: cookiebot or cookieyes.');
 }
 
-const verify = async (filename: 'browser.js' | 'browser.mjs'): Promise<void> => {
-    const path = resolve('dist', filename);
+const packageRequire = createRequire(resolve('package.json'));
+const esbuild = packageRequire('esbuild') as EsbuildRuntime;
+
+const readRuntimeSource = async (filename: 'browser.js' | 'browser.mjs'): Promise<string> => {
+    const source = await readFile(resolve('dist', filename), 'utf8');
+
+    if (filename === 'browser.js') {
+        return source;
+    }
+
+    return (await esbuild.transform(source, {format: 'iife', loader: 'js', sourcefile: filename})).code;
+};
+
+const verifyConsentBeforeWebflow = (filename: 'browser.js' | 'browser.mjs', source: string): void => {
     const browser = new Window({url: 'https://example.com'}) as TestWindow;
     const calls: TrackingCall[] = [];
+    const errors: unknown[] = [];
+    const readyListeners: (() => void)[] = [];
+    const expectedCalls: TrackingCall[] = [];
 
-    browser.wf = {
-        allowUserTracking: options => calls.push({activate: options?.activate, choice: 'allow'}),
-        denyUserTracking: () => calls.push({choice: 'deny'}),
-        ready: listener => listener(),
+    const assertCalls = (step: string) => {
+        if (errors.length > 0) {
+            throw new Error(`${integration} ${filename}: browser error during ${step}: ${errors.map(String).join('; ')}`);
+        }
+
+        if (!isDeepStrictEqual(calls, expectedCalls)) {
+            throw new Error(
+                `${integration} ${filename}: unexpected tracking calls after ${step}. Expected ${JSON.stringify(expectedCalls)}, received ${JSON.stringify(calls)}.`,
+            );
+        }
     };
 
-    const globals = globalThis as Record<string, unknown>;
-    globals.window = browser;
-    globals.document = browser.document;
-    globals.Event = browser.Event;
-    globals.CustomEvent = browser.CustomEvent;
-    globals.wf = browser.wf;
+    browser.addEventListener('error', event => {
+        const errorEvent = event as unknown as ErrorEvent;
+        errors.push(errorEvent.error ?? errorEvent.message);
+        event.preventDefault();
+    });
 
-    await import(pathToFileURL(path).href);
-    if (calls.at(-1)?.choice !== 'deny') {
-        throw new Error(`${integration} ${filename}: bundle did not default Webflow tracking to deny.`);
-    }
+    try {
+        browser.eval(source);
 
-    if (integration === 'cookiebot') {
-        const cookiebot = {consent: {statistics: true}};
-        browser.Cookiebot = cookiebot;
-        browser.dispatchEvent(new browser.Event('CookiebotOnConsentReady'));
-
-        const allowed = calls.at(-1);
-
-        if (allowed?.choice !== 'allow' || allowed.activate !== true) {
-            throw new Error(`cookiebot ${filename}: statistics consent did not activate tracking immediately.`);
+        if (integration === 'cookiebot') {
+            browser.Cookiebot = {consent: {statistics: true}};
+            browser.dispatchEvent(new browser.Event('CookiebotOnConsentReady'));
         }
 
-        cookiebot.consent.statistics = false;
-        browser.dispatchEvent(new browser.Event('CookiebotOnDecline'));
-    }
-
-    if (integration === 'cookieyes') {
-        browser.document.dispatchEvent(
-            new browser.CustomEvent('cookieyes_banner_load', {
-                detail: {categories: {analytics: true, necessary: true}},
-            }),
-        );
-
-        const allowed = calls.at(-1);
-
-        if (allowed?.choice !== 'allow' || allowed.activate !== true) {
-            throw new Error(`cookieyes ${filename}: analytics consent did not activate tracking immediately.`);
+        if (integration === 'cookieyes') {
+            browser.document.dispatchEvent(
+                new browser.CustomEvent('cookieyes_banner_load', {
+                    detail: {categories: {analytics: true, necessary: true}},
+                }),
+            );
         }
 
-        browser.document.dispatchEvent(
-            new browser.CustomEvent('cookieyes_consent_update', {
-                detail: {accepted: ['necessary'], rejected: ['analytics']},
-            }),
-        );
+        assertCalls('allowed consent before Webflow installation');
+
+        browser.wf = {
+            allowUserTracking: options => calls.push({choice: 'allow', options: options === undefined ? undefined : {...options}}),
+            denyUserTracking: () => calls.push({choice: 'deny'}),
+            ready: listener => readyListeners.push(listener),
+        };
+
+        browser.dispatchEvent(new browser.Event('load'));
+        assertCalls('window load before Webflow readiness after allowed consent');
+
+        if (readyListeners.length !== 1) {
+            throw new Error(`${integration} ${filename}: expected one Webflow ready callback after window load, received ${readyListeners.length}.`);
+        }
+
+        readyListeners[0]();
+        expectedCalls.push({choice: 'allow', options: {activate: true}});
+        assertCalls('Webflow readiness after allowed consent');
+    } finally {
+        browser.close();
+    }
+};
+
+const verify = async (filename: 'browser.js' | 'browser.mjs'): Promise<void> => {
+    const source = await readRuntimeSource(filename);
+    const browser = new Window({url: 'https://example.com'}) as TestWindow;
+    const calls: TrackingCall[] = [];
+    const errors: unknown[] = [];
+    const readyListeners: (() => void)[] = [];
+    const expectedCalls: TrackingCall[] = [];
+
+    const assertNoBrowserErrors = (step: string) => {
+        if (errors.length === 0) {
+            return;
+        }
+
+        throw new Error(`${integration} ${filename}: browser error during ${step}: ${errors.map(String).join('; ')}`);
+    };
+
+    const assertCalls = (step: string) => {
+        assertNoBrowserErrors(step);
+
+        if (!isDeepStrictEqual(calls, expectedCalls)) {
+            throw new Error(
+                `${integration} ${filename}: unexpected tracking calls after ${step}. Expected ${JSON.stringify(expectedCalls)}, received ${JSON.stringify(calls)}.`,
+            );
+        }
+    };
+
+    browser.addEventListener('error', event => {
+        const errorEvent = event as unknown as ErrorEvent;
+        errors.push(errorEvent.error ?? errorEvent.message);
+        event.preventDefault();
+    });
+
+    try {
+        browser.eval(source);
+
+        browser.wf = {
+            allowUserTracking: options => calls.push({choice: 'allow', options: options === undefined ? undefined : {...options}}),
+            denyUserTracking: () => calls.push({choice: 'deny'}),
+            ready: listener => readyListeners.push(listener),
+        };
+
+        browser.dispatchEvent(new browser.Event('load'));
+        assertCalls('window load before Webflow readiness');
+
+        if (readyListeners.length !== 1) {
+            throw new Error(`${integration} ${filename}: expected one Webflow ready callback after window load, received ${readyListeners.length}.`);
+        }
+
+        readyListeners[0]();
+        expectedCalls.push({choice: 'deny'});
+        assertCalls('Webflow readiness');
+
+        if (integration === 'cookiebot') {
+            const cookiebot = {consent: {statistics: false}};
+            browser.Cookiebot = cookiebot;
+            const transitions: {event: string; statistics: boolean; call: TrackingCall}[] = [
+                {event: 'CookiebotOnConsentReady', statistics: true, call: {choice: 'allow', options: {activate: true}}},
+                {event: 'CookiebotOnConsentReady', statistics: false, call: {choice: 'deny'}},
+                {event: 'CookiebotOnAccept', statistics: true, call: {choice: 'allow', options: {activate: true}}},
+                {event: 'CookiebotOnAccept', statistics: false, call: {choice: 'deny'}},
+                {event: 'CookiebotOnDecline', statistics: true, call: {choice: 'allow', options: {activate: true}}},
+                {event: 'CookiebotOnDecline', statistics: false, call: {choice: 'deny'}},
+            ];
+
+            for (const transition of transitions) {
+                cookiebot.consent.statistics = transition.statistics;
+                browser.dispatchEvent(new browser.Event(transition.event));
+                expectedCalls.push(transition.call);
+                assertCalls(`${transition.event} with statistics ${transition.statistics}`);
+            }
+        }
+
+        if (integration === 'cookieyes') {
+            const transitions: {event: string; detail: object; call: TrackingCall}[] = [
+                {
+                    event: 'cookieyes_banner_load',
+                    detail: {categories: {analytics: true, necessary: true}},
+                    call: {choice: 'allow', options: {activate: true}},
+                },
+                {
+                    event: 'cookieyes_banner_load',
+                    detail: {categories: {analytics: false, necessary: true}},
+                    call: {choice: 'deny'},
+                },
+                {
+                    event: 'cookieyes_consent_update',
+                    detail: {accepted: ['necessary', 'analytics'], rejected: ['advertisement']},
+                    call: {choice: 'allow', options: {activate: true}},
+                },
+                {
+                    event: 'cookieyes_consent_update',
+                    detail: {accepted: ['necessary'], rejected: ['analytics']},
+                    call: {choice: 'deny'},
+                },
+            ];
+
+            for (const transition of transitions) {
+                browser.document.dispatchEvent(
+                    new browser.CustomEvent(transition.event, {
+                        detail: transition.detail,
+                    }),
+                );
+                expectedCalls.push(transition.call);
+                assertCalls(`${transition.event} with ${transition.call.choice} consent`);
+            }
+        }
+    } finally {
+        browser.close();
     }
 
-    if (calls.at(-1)?.choice !== 'deny') {
-        throw new Error(`${integration} ${filename}: consent revocation did not deny tracking.`);
-    }
-
-    browser.close();
+    verifyConsentBeforeWebflow(filename, source);
 };
 
 await verify('browser.js');

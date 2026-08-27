@@ -33,6 +33,10 @@ tasks:
             - '/vite.config.ts'
             - '/apps/**/*.test.{ts,tsx}'
             - '/packages/**/*.test.{ts,tsx}'
+            - '/packages/cookiebot/package.json'
+            - '/packages/cookieyes/package.json'
+            - '/scripts/**/*.test.{ts,tsx}'
+            - '/scripts/**/*.ts'
         options:
             runInCI: 'always'
 

@@ -53,13 +53,14 @@ if (
 
 const extraFiles = release?.['extra-files'] ?? [];
 const expectedExtraFiles = ['packages/cookiebot/package.json', 'packages/cookieyes/package.json'];
+const versionExtraFiles = extraFiles.filter(file => file.type === 'json' && file.jsonpath === '$.version');
 
-const actualExtraFiles = extraFiles
-    .filter(file => file.type === 'json' && file.jsonpath === '$.version')
+const actualExtraFiles = versionExtraFiles
     .map(file => file.path)
-    .sort((a, b) => (a ?? '').localeCompare(b ?? ''));
+    .filter((path): path is string => typeof path === 'string')
+    .sort();
 
-if (JSON.stringify(actualExtraFiles) !== JSON.stringify(expectedExtraFiles)) {
+if (versionExtraFiles.length !== actualExtraFiles.length || JSON.stringify(actualExtraFiles) !== JSON.stringify(expectedExtraFiles)) {
     throw new Error(`Release Please version targets do not match: ${actualExtraFiles.join(', ')}.`);
 }
 
