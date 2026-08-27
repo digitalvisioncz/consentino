@@ -4,47 +4,50 @@ language: 'typescript'
 layer: 'tool'
 
 tasks:
-  lint:
-    script: 'oxlint . && oxfmt "**/*.{js,jsx,ts,tsx,mjs,cjs,mts}" "*.{js,jsx,ts,tsx,mjs,cjs,mts}" --check && stylelint "**/*.{css,scss}" --allow-empty-input'
-    inputs:
-      - '/AGENTS.md'
-      - '/docs/**/*.{js,jsx,ts,tsx,mjs,cjs,mts,css,scss}'
-      - '/packages/**/*.{js,jsx,ts,tsx,mjs,cjs,mts,css,scss}'
-      - '/.oxfmtrc.json'
-      - '/.oxlintrc.json'
-      - '/stylelint.config.js'
-      - '/vite.config.ts'
-    options:
-      runInCI: 'always'
+    lint:
+        script: 'oxlint . && oxfmt "**/*.{js,jsx,ts,tsx,mjs,cjs,mts}" "*.{js,jsx,ts,tsx,mjs,cjs,mts}" --check && stylelint "**/*.{css,scss}" --allow-empty-input'
+        inputs:
+            - '/apps/**/*.{js,jsx,ts,tsx,mjs,cjs,mts,css,scss}'
+            - '/packages/**/*.{js,jsx,ts,tsx,mjs,cjs,mts,css,scss}'
+            - '/scripts/**/*.{js,jsx,ts,tsx,mjs,cjs,mts}'
+            - '/.oxfmtrc.json'
+            - '/.oxlintrc.json'
+            - '/stylelint.config.js'
+            - '/vite.config.ts'
+        options:
+            runInCI: 'always'
 
-  typecheck:
-    command: 'tsc -b'
-    inputs:
-      - '/tsconfig.json'
-      - '/docs/**/*.ts'
-      - '/packages/**/*.ts'
-    options:
-      runInCI: 'always'
+    typecheck:
+        command: 'tsc -b'
+        inputs:
+            - '/tsconfig.json'
+            - '/apps/**/*.ts'
+            - '/packages/**/*.ts'
+            - '/scripts/**/*.ts'
+        options:
+            runInCI: 'always'
 
-  test:
-    command: 'vp test run --passWithNoTests'
-    inputs:
-      - '/vite.config.ts'
-      - '/docs/**/*.test.{ts,tsx}'
-      - '/packages/**/*.test.{ts,tsx}'
-    options:
-      runInCI: 'always'
+    test:
+        command: 'vp test run --passWithNoTests'
+        inputs:
+            - '/vite.config.ts'
+            - '/apps/**/*.test.{ts,tsx}'
+            - '/packages/**/*.test.{ts,tsx}'
+            - '/packages/cookiebot/package.json'
+            - '/packages/cookieyes/package.json'
+            - '/scripts/**/*.test.{ts,tsx}'
+            - '/scripts/**/*.ts'
+        options:
+            runInCI: 'always'
 
-  version:
-    command: 'changeset version'
-    options:
-      cache: false
-      runInCI: false
-
-  release:
-    command: 'changeset publish'
-    env:
-      NPM_CONFIG_PROVENANCE: 'true'
-    options:
-      cache: false
-      runInCI: false
+    release-check:
+        command: 'node scripts/verify-release-config.ts'
+        inputs:
+            - '/package.json'
+            - '/packages/cookiebot/package.json'
+            - '/packages/cookieyes/package.json'
+            - '/release-please-config.json'
+            - '/.release-please-manifest.json'
+            - '/scripts/verify-release-config.ts'
+        options:
+            runInCI: 'always'

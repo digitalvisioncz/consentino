@@ -1,0 +1,9 @@
+{
+    "name": "@consentino/web",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "devDependencies": {
+        "astro": "7.2.7"
+    }
+}

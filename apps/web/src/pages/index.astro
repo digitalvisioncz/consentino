@@ -1,0 +1,67 @@
+---
+import '../styles/global.css';
+
+const integrations = [
+    {name: 'Cookiebot', packageName: '@consentino/cookiebot'},
+    {name: 'CookieYes', packageName: '@consentino/cookieyes'},
+];
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="description" content="Connect Cookiebot or CookieYes consent to Webflow site tracking." />
+        <title>Consentino — CMP consent for Webflow</title>
+    </head>
+    <body>
+        <header class="site-header">
+            <a class="brand" href={import.meta.env.BASE_URL} aria-label="Consentino home">Consentino</a>
+            <span class="status">Early development</span>
+        </header>
+
+        <main>
+            <section class="hero" aria-labelledby="hero-title">
+                <p class="eyebrow">Cookie consent bridge for Webflow</p>
+                <h1 id="hero-title">Your CMP decides.<br />Webflow listens.</h1>
+                <p class="lede">Tiny head scripts that keep Webflow site tracking aligned with the consent already managed by Cookiebot or CookieYes.</p>
+            </section>
+
+            <section class="integrations" aria-labelledby="integrations-title">
+                <div class="section-heading">
+                    <p class="eyebrow">Integrations</p>
+                    <h2 id="integrations-title">One script for each CMP.</h2>
+                </div>
+
+                <div class="integration-grid">
+                    {
+                        integrations.map(integration => (
+                            <article class="integration-card">
+                                <span class="integration-mark" aria-hidden="true" />
+                                <h3>{integration.name}</h3>
+                                <code>{integration.packageName}</code>
+                            </article>
+                        ))
+                    }
+                </div>
+            </section>
+
+            <section class="install" aria-labelledby="install-title">
+                <p class="eyebrow">Installation</p>
+                <h2 id="install-title">A first-in-head CDN snippet.</h2>
+                <div class="code-placeholder" aria-label="Installation documentation coming soon">
+                    <span />
+                    <span />
+                    <span />
+                </div>
+                <p>Installation guides and production packages are coming soon.</p>
+            </section>
+        </main>
+
+        <footer>
+            <span>Consentino</span>
+            <span>Built for Webflow sites.</span>
+        </footer>
+    </body>
+</html>

@@ -13,11 +13,19 @@ Moon is the canonical task interface. Do not add root `pnpm dev`/`build`/`lint`/
 - Typecheck: `moon run root:typecheck`.
 - Lint: `moon run root:lint`. Auto-fix the underlying tools with `pnpm exec oxlint . --fix`, `pnpm exec oxfmt "**/*.{js,jsx,ts,tsx,mjs,cjs,mts}" "*.{js,jsx,ts,tsx,mjs,cjs,mts}"`, and `pnpm exec stylelint "**/*.{css,scss}" --fix --allow-empty-input`.
 - Node tests: `moon run root:test`. Test imports: `import {describe, it, expect} from "vite-plus/test"`.
-- Package inspection: `moon run browser:pack`.
+- Package inspection: `moon run cookiebot:pack` and `moon run cookieyes:pack`.
+- Release configuration: `moon run root:release-check`.
 - CI task graph: `moon ci`.
 - JavaScript and TypeScript formatting is owned by Oxfmt; CSS and SCSS formatting remains owned by Stylelint.
 - Do not use `vp lint` or `vp fmt`; invoke the pinned Oxlint and Oxfmt packages directly.
 - Root `vite.config.ts` only configures the test runner; `vite.config.js` is a gitignored compiled artifact — never edit or commit it.
+
+## Git and releases
+- Merge `feature/*` pull requests into `next` with squash merge. The pull request title becomes the Conventional Commit message.
+- Merge `next` into `main` with rebase merge so individual Conventional Commits remain visible to Release Please.
+- Release Please keeps one version, changelog, tag, and GitHub Release for both public packages.
+- Before `1.0.0`, breaking commits bump the minor version. Force a stable release with a `Release-As: 1.0.0` commit body.
+- Do not merge a release pull request until `NPM_PUBLISH_ENABLED` is `true` and npm trusted publishing is configured for `.github/workflows/release.yml` with the `npm` environment.
 
 ## Handling test/lint/ts failures
 - Don't spend turns proving a failure isn't from your change. Establish a baseline ONCE (`git stash` → run → `git stash pop`, or check a file you didn't touch), then move on.

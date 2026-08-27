@@ -1,5 +1,7 @@
 packages:
-  - docs
-  - packages/*
+    - apps/*
+    - packages/*
 allowBuilds:
-  esbuild: true
+    esbuild: true
+minimumReleaseAgeExclude:
+    - astro@7.2.7

@@ -1,6 +1,6 @@
 export default {
     extends: ['@dvdevcz/stylelint'],
-    ignoreFiles: ['**/dist/**', '**/.vitepress/cache/**'],
+    ignoreFiles: ['**/dist/**', '**/.astro/**'],
     rules: {
         'csstree/validator': {
             properties: {

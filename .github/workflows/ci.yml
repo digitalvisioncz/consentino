@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - next
   pull_request:
 
 permissions:
@@ -34,5 +35,5 @@ jobs:
       - name: Run Moon CI graph
         run: moon ci
 
-      - name: Inspect browser package
-        run: moon run browser:pack
+      - name: Inspect browser packages
+        run: moon run cookiebot:pack cookieyes:pack

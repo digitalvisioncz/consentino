@@ -1,64 +1,38 @@
 # Consentino
 
-Framework-agnostic cookie consent web components with Google Consent Mode v2 support.
+Tiny browser scripts that synchronize Cookiebot or CookieYes analytics consent with Webflow site tracking.
 
 > [!NOTE]
-> Consentino is currently under development. The package is not ready for production use yet.
+> Consentino is under development. The packages are not ready for production use yet.
 
-Consentino is designed for marketing websites that use Google Tag Manager and Google Analytics 4. It will provide a small, synchronous browser script that can be placed before GTM as the first executable script in `<head>`.
+## Integrations
 
-## Features
+Configure Webflow to track visitors only after opt-in, then place Consentino as the first executable script in `<head>`, before CMP (CookieBot or CookieYes):
 
-- Default-denied Google Consent Mode v2 flow.
-- Necessary, analytics and preferences, and marketing consent groups.
-- Declarative web components built with Atomico.
-- First-party, host-only consent cookie.
-- DOM custom events and `dataLayer` events.
-- Styling through documented `--consentino-*` CSS custom properties.
-- No framework or browser polyfills required.
-
-## Browser package
-
-`@consentino/browser` will contain the complete classic browser bundle: early Consent Mode initialization, persisted consent handling, and web component registration.
-
-The intended integration is a synchronous script placed before GTM:
+### Cookiebot
 
 ```html
-<head>
-  <script
-    src="/path/to/consentino.js"
-    data-consent-version="2026-01"
-  ></script>
-
-  <!-- Google Tag Manager follows Consentino. -->
-</head>
+<script src="https://cdn.jsdelivr.net/npm/@consentino/cookiebot"></script>
 ```
 
-The page will then declare its consent UI with Consentino custom elements:
+### CookieYes
 
 ```html
-<consentino consent-version="2026-01">
-  <consentino-banner>
-    <consentino-description>
-      We use cookies to improve this website and show relevant content.
-    </consentino-description>
-
-    <consentino-actions>
-      <consentino-action action="accept-all">Accept all</consentino-action>
-      <consentino-action action="reject-optional">Reject optional</consentino-action>
-      <consentino-action action="open-preferences">Preferences</consentino-action>
-    </consentino-actions>
-  </consentino-banner>
-</consentino>
+<script src="https://cdn.jsdelivr.net/npm/@consentino/cookieyes"></script>
 ```
 
-See the [full documentation](https://digitalvisioncz.github.io/consentino/) for architecture and the evolving public API.
+## Workspace
+
+```text
+apps/web             Astro landing page
+packages/core        Private Webflow consent runtime
+packages/cookiebot   Public Cookiebot integration
+packages/cookieyes   Public CookieYes integration
+```
 
 ## Contributing
 
-### Local setup
-
-Install [proto](https://moonrepo.dev/proto), then install the pinned toolchain and workspace dependencies:
+Install [proto](https://moonrepo.dev/proto), then install the pinned toolchain and dependencies:
 
 ```bash
 proto install
@@ -67,42 +41,37 @@ pnpm install
 
 Moon is the canonical task interface:
 
-| Task | Command |
-| --- | --- |
-| Run documentation locally | `moon run docs:dev` |
-| Build all projects | `moon run :build` |
-| Lint | `moon run root:lint` |
-| Typecheck | `moon run root:typecheck` |
-| Run tests | `moon run root:test` |
-| Inspect the browser package | `moon run browser:pack` |
-| Run the affected CI graph | `moon ci` |
+| Task                        | Command                       |
+| --------------------------- | ----------------------------- |
+| Run the website locally     | `moon run docs:dev`           |
+| Build all projects          | `moon run :build`             |
+| Lint                        | `moon run root:lint`          |
+| Typecheck                   | `moon run root:typecheck`     |
+| Run tests                   | `moon run root:test`          |
+| Inspect Cookiebot package   | `moon run cookiebot:pack`     |
+| Inspect CookieYes package   | `moon run cookieyes:pack`     |
+| Check release configuration | `moon run root:release-check` |
+| Run the affected CI graph   | `moon ci`                     |
 
-### Commits and pull requests
+Commit messages and pull request titles follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/).
 
-Commit messages and pull request titles follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/):
+## Releases
 
-```text
-<type>[optional scope][!]: <description>
-```
+Cookiebot and CookieYes share one version and one changelog. Release Please derives releases from Conventional Commit messages after changes reach `main`.
 
-Examples:
+- `fix:` creates a patch release.
+- `feat:` creates a minor release.
+- Before `1.0.0`, a breaking commit also creates a minor release.
+- Add `Release-As: 1.0.0` to a commit body to request the first stable release.
 
-```text
-feat(browser): add consent state serialization
-fix(docs): correct the head script example
-refactor!: remove the deprecated event payload
-```
+Feature pull requests are squash-merged into `next`. The aggregated `next` branch is rebased into `main`, preserving the feature commit messages used to build the release notes.
 
-Allowed types are `feat`, `fix`, `docs`, `refactor`, `test`, `build`, `ci`, `chore`, `perf`, and `revert`. Use `!` for a breaking change and explain it in the commit or pull request body.
+Repository release setup:
 
-Before opening a pull request:
-
-1. Run `moon ci`.
-2. Run `moon run browser:pack` when changing the published package.
-3. Add a Changeset for a user-visible package change with `pnpm exec changeset`.
-4. Use a Conventional Commit title for the pull request.
-
-Pull requests should be squash-merged using their title as the resulting commit message. GitHub Actions validates every pull request title.
+- Add `RELEASE_PLEASE_TOKEN` as a repository secret so generated pull requests trigger CI.
+- Create the `npm` environment and set `NPM_PUBLISH_ENABLED=true` only when publishing is ready.
+- Configure npm trusted publishing for both packages against `digitalvisioncz/consentino`, workflow `release.yml`, and environment `npm`.
+- Enable GitHub Actions to create pull requests.
 
 ## License
 
