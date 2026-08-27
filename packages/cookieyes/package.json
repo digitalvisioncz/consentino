@@ -9,7 +9,11 @@
         "url": "git+https://github.com/digitalvisioncz/consentino.git",
         "directory": "packages/cookieyes"
     },
-    "files": ["dist", "README.md", "LICENSE"],
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
     "browser": "./dist/browser.js",
     "module": "./dist/browser.mjs",
     "types": "./dist/browser.d.ts",
