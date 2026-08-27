@@ -1,0 +1,28 @@
+{
+  "name": "consentino",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bridge CMP consent to Webflow site tracking.",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/digitalvisioncz/consentino.git"
+  },
+  "packageManager": "pnpm@11.23.0",
+  "engines": {
+    "node": ">=24.11.0"
+  },
+  "devDependencies": {
+    "@dvdevcz/stylelint": "0.1.1",
+    "@moonrepo/cli": "2.5.3",
+    "@types/node": "24.13.3",
+    "happy-dom": "20.11.6",
+    "oxfmt": "0.64.0",
+    "oxlint": "1.79.0",
+    "oxlint-tsgolint": "7.0.2001",
+    "stylelint": "17.14.1",
+    "typescript": "7.0.2",
+    "vite-plus": "0.3.0"
+  }
+}

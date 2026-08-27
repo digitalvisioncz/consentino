@@ -1,0 +1,10 @@
+fileGroups:
+  sources:
+    - 'src/**/*'
+  configs:
+    - '*.config.{js,mjs,ts}'
+    - 'tsconfig.json'
+    - 'package.json'
+
+taskOptions:
+  runInCI: false

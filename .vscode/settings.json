@@ -1,0 +1,13 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.format.oxc": "always",
+        "source.fixAll.oxc": "always"
+    },
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.formatOnSave": false,
+    "oxc.configPath": "./.oxlintrc.json",
+    "oxc.disableNestedConfig": true,
+    "oxc.fmt.configPath": "./.oxfmtrc.json",
+    "oxc.fmt.disableNestedConfig": true,
+    "oxc.requireConfig": true
+}
