@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.1](https://github.com/digitalvisioncz/consentino/compare/v0.1.0...v0.1.1) (2026-08-27)
+
+
+### Bug Fixes
+
+* enhance release workflow to resolve latest GitHub release and pu… ([f0a2f88](https://github.com/digitalvisioncz/consentino/commit/f0a2f8898b3654bca4ea21ebb92da2e4cf04b521))
+* enhance release workflow to resolve latest GitHub release and publish missing packages ([4710a39](https://github.com/digitalvisioncz/consentino/commit/4710a39ed6e0563d8de5fac5da7b338357ab64bf))
+
 ## 0.1.0 (2026-08-27)
 
 
