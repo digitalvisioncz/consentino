@@ -20,21 +20,42 @@ jobs:
       issues: write
       pull-requests: write
     outputs:
-      created: ${{ steps.release.outputs.release_created }}
-      version: ${{ steps.release.outputs.version }}
+      created: ${{ steps.release.outputs.release_created || steps.latest.outputs.release_created }}
+      tag: ${{ steps.release.outputs.tag_name || steps.latest.outputs.tag }}
+      version: ${{ steps.release.outputs.version || steps.latest.outputs.version }}
 
     steps:
       - name: Create release pull request or GitHub release
         id: release
+        if: github.event_name == 'push'
         uses: googleapis/release-please-action@v4
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
 
+      - name: Resolve latest GitHub release
+        id: latest
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          tag="$(gh api "repos/${GITHUB_REPOSITORY}/releases/latest" --jq '.tag_name')"
+
+          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Latest release tag must use vMAJOR.MINOR.PATCH: $tag" >&2
+            exit 1
+          fi
+
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
+          echo "release_created=true" >> "$GITHUB_OUTPUT"
+
   publish:
     name: Publish npm packages
-    if: needs.release.outputs.created == 'true' && vars.NPM_PUBLISH_ENABLED == 'true'
+    if: github.ref == 'refs/heads/main' && needs.release.outputs.created == 'true' && vars.NPM_PUBLISH_ENABLED == 'true'
     needs: release
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -50,6 +71,7 @@ jobs:
         uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
+          ref: ${{ needs.release.outputs.tag }}
 
       - name: Set up toolchain
         uses: moonrepo/setup-toolchain@v0.6.4
@@ -78,6 +100,33 @@ jobs:
           pnpm --dir packages/cookieyes pack --pack-destination "$RUNNER_TEMP/consentino-packages"
 
       - name: Publish npm packages
+        env:
+          RELEASE_VERSION: ${{ needs.release.outputs.version }}
         run: |
-          npm publish "$RUNNER_TEMP/consentino-packages/consentino-cookiebot-${{ needs.release.outputs.version }}.tgz" --access public
-          npm publish "$RUNNER_TEMP/consentino-packages/consentino-cookieyes-${{ needs.release.outputs.version }}.tgz" --access public
+          set -euo pipefail
+
+          publish_if_missing() {
+            package="$1"
+            archive="$2"
+            lookup="$RUNNER_TEMP/npm-view-${package##*/}.json"
+
+            if npm view "${package}@${RELEASE_VERSION}" version --json > "$lookup" 2>&1; then
+              echo "${package}@${RELEASE_VERSION} is already published; skipping."
+              return
+            fi
+
+            if grep -Eq '"code"[[:space:]]*:[[:space:]]*"E404"' "$lookup"; then
+              npm publish "$archive" --access public
+              return
+            fi
+
+            cat "$lookup" >&2
+            return 1
+          }
+
+          publish_if_missing \
+            '@consentino/cookiebot' \
+            "$RUNNER_TEMP/consentino-packages/consentino-cookiebot-${RELEASE_VERSION}.tgz"
+          publish_if_missing \
+            '@consentino/cookieyes' \
+            "$RUNNER_TEMP/consentino-packages/consentino-cookieyes-${RELEASE_VERSION}.tgz"
