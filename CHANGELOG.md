@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/digitalvisioncz/consentino/compare/v0.1.1...v0.2.0) (2026-08-31)
+
+
+### Features
+
+* enhance integration switcher functionality and improve UI/UX in index page ([8672316](https://github.com/digitalvisioncz/consentino/commit/8672316a2fcdf4fdfc0b55ecfed6ddb0bdf97733))
+
 ## [0.1.1](https://github.com/digitalvisioncz/consentino/compare/v0.1.0...v0.1.1) (2026-08-27)
 
 
