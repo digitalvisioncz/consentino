@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "description": "Bridge CMP consent to Webflow site tracking.",
+  "author": {
+    "name": "Digital Vision",
+    "email": "software@digitalvision.cz",
+    "url": "https://digitalvision.cz"
+  },
   "license": "MIT",
   "type": "module",
   "repository": {
@@ -23,6 +28,7 @@
     "oxlint-tsgolint": "7.0.2001",
     "stylelint": "17.14.1",
     "typescript": "7.0.2",
-    "vite-plus": "0.3.0"
+    "vite-plus": "0.3.0",
+    "yaml": "2.9.0"
   }
 }

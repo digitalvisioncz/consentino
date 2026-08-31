@@ -1,34 +1,36 @@
 # Consentino
 
-Tiny browser scripts that synchronize Cookiebot or CookieYes analytics consent with Webflow site tracking.
+Consentino connects analytics consent from Cookiebot or CookieYes to Webflow site tracking, so Webflow follows the choice visitors make in your existing cookie banner.
 
-> [!NOTE]
-> Consentino is under development. The packages are not ready for production use yet.
+## Why Consentino?
+
+We built Consentino after encountering the same gap on client Webflow sites. We wanted to use Webflow's native analytics while respecting visitor privacy and GDPR requirements. But neither Webflow nor the consent management platforms offered a native connection. Making them work together meant researching both systems and writing custom integration code for every project.
+
+Consentino packages that integration into small, production-ready browser scripts. It listens for analytics consent and tells Webflow to allow or deny tracking—both when the page loads and whenever a visitor changes their choice. You keep your existing consent banner and add one script for the platform you use.
+
+Consentino does not replace your consent management platform or determine your legal requirements. It synchronizes the analytics consent collected by your platform with Webflow site tracking.
 
 ## Integrations
 
-Configure Webflow to track visitors only after opt-in, then place Consentino as the first executable script in `<head>`, before CMP (CookieBot or CookieYes):
+1. Open your site in Webflow.
+2. Go to **Insights → Settings → Tracking**.
+3. Turn on **Start tracking visitor behavior data** and select **Don't track by default**. This keeps tracking off until a visitor gives consent. See [Webflow's tracking settings guide](https://help.webflow.com/hc/en-us/articles/33620965657107-Analyze-Optimize-tracking-settings) for more details.
+4. Go to **Site settings → Custom code → Head code**.
+5. Choose the integration you use and paste its script at the top of the **Head code** field, before your Cookiebot or CookieYes script.
 
-### Cookiebot
+#### Cookiebot
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@consentino/cookiebot"></script>
 ```
 
-### CookieYes
+#### CookieYes
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@consentino/cookieyes"></script>
 ```
 
-## Workspace
-
-```text
-apps/web             Astro landing page
-packages/core        Private Webflow consent runtime
-packages/cookiebot   Public Cookiebot integration
-packages/cookieyes   Public CookieYes integration
-```
+6. Click **Save changes**, then publish the site. Custom code only takes effect after publishing. See [Webflow's custom code guide](https://help.webflow.com/hc/en-us/articles/33961357265299-Custom-code-in-head-and-body-tags) if you need help finding the **Head code** field.
 
 ## Contributing
 
@@ -48,30 +50,8 @@ Moon is the canonical task interface:
 | Lint                        | `moon run root:lint`          |
 | Typecheck                   | `moon run root:typecheck`     |
 | Run tests                   | `moon run root:test`          |
-| Inspect Cookiebot package   | `moon run cookiebot:pack`     |
-| Inspect CookieYes package   | `moon run cookieyes:pack`     |
-| Check release configuration | `moon run root:release-check` |
-| Run the affected CI graph   | `moon ci`                     |
 
 Commit messages and pull request titles follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/).
-
-## Releases
-
-Cookiebot and CookieYes share one version and one changelog. Release Please derives releases from Conventional Commit messages after changes reach `main`.
-
-- `fix:` creates a patch release.
-- `feat:` creates a minor release.
-- Before `1.0.0`, a breaking commit also creates a minor release.
-- Add `Release-As: 1.0.0` to a commit body to request the first stable release.
-
-Feature pull requests are squash-merged into `next`. The aggregated `next` branch is rebased into `main`, preserving the feature commit messages used to build the release notes.
-
-Repository release setup:
-
-- Add `RELEASE_PLEASE_TOKEN` as a repository secret so generated pull requests trigger CI.
-- Create the `npm` environment and set `NPM_PUBLISH_ENABLED=true` only when publishing is ready.
-- Configure npm trusted publishing for both packages against `digitalvisioncz/consentino`, workflow `release.yml`, and environment `npm`.
-- Enable GitHub Actions to create pull requests.
 
 ## License
 
