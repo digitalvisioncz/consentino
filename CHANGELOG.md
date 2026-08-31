@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/digitalvisioncz/consentino/compare/v0.2.0...v0.2.1) (2026-08-31)
+
+
+### Bug Fixes
+
+* update site URL in astro.config.mjs for production environment ([0b40cb8](https://github.com/digitalvisioncz/consentino/commit/0b40cb8f39b58b2893318fde38bdc1f32011042a))
+
 ## [0.2.0](https://github.com/digitalvisioncz/consentino/compare/v0.1.1...v0.2.0) (2026-08-31)
 
 
