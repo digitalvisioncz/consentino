@@ -236,16 +236,36 @@ a:focus-visible {
 }
 
 .code-block code {
-    overflow-x: auto;
-    padding-block: .5rem;
+    scrollbar-color: #56748c transparent;
+    scrollbar-width: thin;
+    overflow: auto hidden;
+    display: block;
+    min-width: 0;
+    block-size: 2.25rem;
+    padding-block: .375rem .5rem;
     font-size: .875rem;
+    line-height: 1.25rem;
     color: #dbe8f3;
     white-space: nowrap;
+}
+
+.code-block code::-webkit-scrollbar {
+    height: .25rem;
+}
+
+.code-block code::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.code-block code::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: #56748c;
 }
 
 .copy-button {
     cursor: pointer;
     flex: 0 0 auto;
+    min-inline-size: 5.25rem;
     padding: .65rem .9rem;
     border: 1px solid #3b5870;
     border-radius: .65rem;
