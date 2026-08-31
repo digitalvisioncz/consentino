@@ -2,9 +2,17 @@
 import '../styles/global.css';
 
 const integrations = [
-    {name: 'Cookiebot', packageName: '@consentino/cookiebot'},
-    {name: 'CookieYes', packageName: '@consentino/cookieyes'},
+    {
+        name: 'Cookiebot',
+        script: '<script src="https://cdn.jsdelivr.net/npm/@consentino/cookiebot"></script>',
+    },
+    {
+        name: 'CookieYes',
+        script: '<script src="https://cdn.jsdelivr.net/npm/@consentino/cookieyes"></script>',
+    },
 ];
+const defaultIntegration = integrations[0]!;
+const githubUrl = 'https://github.com/digitalvisioncz/consentino';
 ---
 
 <!doctype html>
@@ -12,56 +20,121 @@ const integrations = [
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
-        <meta name="description" content="Connect Cookiebot or CookieYes consent to Webflow site tracking." />
-        <title>Consentino — CMP consent for Webflow</title>
+        <meta name="description" content="Connect Cookiebot or CookieYes consent to Webflow Analytics." />
+        <title>Consentino — GDPR consent for Webflow Analytics</title>
     </head>
     <body>
         <header class="site-header">
             <a class="brand" href={import.meta.env.BASE_URL} aria-label="Consentino home">Consentino</a>
-            <span class="status">Early development</span>
+            <a class="header-link" href={githubUrl}>View on GitHub <span aria-hidden="true">↗</span></a>
         </header>
 
         <main>
             <section class="hero" aria-labelledby="hero-title">
                 <p class="eyebrow">Cookie consent bridge for Webflow</p>
-                <h1 id="hero-title">Your CMP decides.<br />Webflow listens.</h1>
+                <h1 id="hero-title">Use Webflow Analytics.<br />Respect GDPR consent.</h1>
                 <p class="lede">Tiny head scripts that keep Webflow site tracking aligned with the consent already managed by Cookiebot or CookieYes.</p>
             </section>
 
-            <section class="integrations" aria-labelledby="integrations-title">
+            <section class="overview section" aria-labelledby="overview-title">
                 <div class="section-heading">
-                    <p class="eyebrow">Integrations</p>
-                    <h2 id="integrations-title">One script for each CMP.</h2>
+                    <p class="eyebrow">What it is</p>
+                    <h2 id="overview-title">Bring GDPR consent to Webflow Analytics.</h2>
                 </div>
-
-                <div class="integration-grid">
-                    {
-                        integrations.map(integration => (
-                            <article class="integration-card">
-                                <span class="integration-mark" aria-hidden="true" />
-                                <h3>{integration.name}</h3>
-                                <code>{integration.packageName}</code>
-                            </article>
-                        ))
-                    }
+                <div class="section-copy">
+                    <p>Consentino connects the analytics consent collected by Cookiebot or CookieYes to Webflow site tracking. When a visitor accepts, declines, or changes their choice, Webflow follows.</p>
+                    <p>One small, production-ready script. No custom consent integration to research, write, or maintain.</p>
                 </div>
             </section>
 
-            <section class="install" aria-labelledby="install-title">
-                <p class="eyebrow">Installation</p>
-                <h2 id="install-title">A first-in-head CDN snippet.</h2>
-                <div class="code-placeholder" aria-label="Installation documentation coming soon">
-                    <span />
-                    <span />
-                    <span />
+            <section class="installation section" aria-labelledby="installation-title">
+                <div class="section-heading">
+                    <p class="eyebrow"></p>
+                    <h2 id="installation-title">Integration</h2>
                 </div>
-                <p>Installation guides and production packages are coming soon.</p>
+
+                <ol class="steps">
+                    <li class="step">
+                        <span class="step-number" aria-hidden="true">01</span>
+                        <div class="step-content">
+                            <h3>Let visitors opt in</h3>
+                            <p>In Webflow, open <strong>Insights → Settings → Tracking</strong>. Turn on tracking and select <strong>Don't track by default</strong>.</p>
+                            <a class="text-link" href="https://help.webflow.com/hc/en-us/articles/33620965657107-Analyze-Optimize-tracking-settings">Webflow tracking guide <span aria-hidden="true">↗</span></a>
+                        </div>
+                    </li>
+
+                    <li class="step">
+                        <span class="step-number" aria-hidden="true">02</span>
+                        <div class="step-content">
+                            <h3>Add the script for your CMP</h3>
+                            <p>Open <strong>Site settings → Custom code → Head code</strong>. Add Consentino before your Cookiebot or CookieYes script.</p>
+
+                            <div class="integration-switcher" data-integration-switcher>
+                                <div class="integration-options" aria-label="Choose your consent platform">
+                                    {
+                                        integrations.map((integration, index) => (
+                                            <button
+                                                type="button"
+                                                data-integration-option
+                                                data-snippet={integration.script}
+                                                aria-pressed={index === 0 ? 'true' : 'false'}
+                                            >
+                                                {integration.name}
+                                            </button>
+                                        ))
+                                    }
+                                </div>
+                                <div class="code-block">
+                                    <code data-integration-code aria-live="polite">{defaultIntegration.script}</code>
+                                    <button class="copy-button" type="button" data-copy-integration>Copy</button>
+                                </div>
+                            </div>
+
+                            <a class="text-link" href="https://help.webflow.com/hc/en-us/articles/33961357265299-Custom-code-in-head-and-body-tags">Webflow custom code guide <span aria-hidden="true">↗</span></a>
+                        </div>
+                    </li>
+
+                    <li class="step">
+                        <span class="step-number" aria-hidden="true">03</span>
+                        <div class="step-content">
+                            <h3>Save and publish</h3>
+                            <p>Save your custom code and publish the site. Consentino will keep Webflow tracking aligned with future consent changes.</p>
+                        </div>
+                    </li>
+                </ol>
+            </section>
+
+            <section class="why section" aria-labelledby="why-title">
+                <div class="section-heading">
+                    <p class="eyebrow">Why Consentino</p>
+                    <h2 id="why-title">Built from a real Webflow project.</h2>
+                </div>
+                <div class="section-copy">
+                    <p>We built Consentino after encountering the same gap on client Webflow sites. We wanted to use Webflow's native analytics while respecting visitor privacy and GDPR requirements, but neither Webflow nor the consent platforms offered a native connection.</p>
+                    <p>Consentino packages the custom integration into a reusable open-source script. It does not replace your consent management platform or determine your legal requirements.</p>
+                </div>
+            </section>
+
+            <section class="outro" aria-labelledby="outro-title">
+                <p class="eyebrow">Open source</p>
+                <h2 id="outro-title">Make Webflow listen to consent.</h2>
+                <p>Read the code, report an issue, or help improve.</p>
+                <div class="outro-links">
+                    <a class="button" href={githubUrl}>Explore Consentino on GitHub <span aria-hidden="true">↗</span></a>
+                    <a class="text-link text-link-light" href="https://digitalvision.cz">Built by Digital Vision <span aria-hidden="true">↗</span></a>
+                </div>
             </section>
         </main>
 
         <footer>
             <span>Consentino</span>
-            <span>Built for Webflow sites.</span>
+            <span>MIT licensed.</span>
         </footer>
+
+        <script>
+            import {setupIntegrationSwitcher} from '../scripts/integration-switcher';
+
+            setupIntegrationSwitcher();
+        </script>
     </body>
 </html>
