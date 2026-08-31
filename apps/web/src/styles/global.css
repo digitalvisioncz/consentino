@@ -1,8 +1,8 @@
 :root {
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-synthesis: none;
-    color: #17211b;
-    background: #f3f5ee;
+    color: #0a1c2e;
+    background: #f3f8fc;
 }
 
 * {
@@ -58,7 +58,7 @@ footer {
     margin: 0 0 1.5rem;
     font-size: .75rem;
     font-weight: 700;
-    color: #526057;
+    color: #536779;
     text-transform: uppercase;
     letter-spacing: .12em;
 }
@@ -67,7 +67,8 @@ footer {
     display: grid;
     align-content: center;
     min-height: 38rem;
-    border-block: 1px solid #d9ded4;
+    border-block: 1px solid #d5e1ec;
+    background: radial-gradient(ellipse 75% 60% at 75% 0%, rgb(255 227 110 / 55%), transparent 70%);
 }
 
 h1,
@@ -91,12 +92,12 @@ h1 {
     margin-bottom: 0;
     font-size: clamp(1.125rem, 2.5vw, 1.5rem);
     line-height: 1.5;
-    color: #526057;
+    color: #536779;
 }
 
 .section {
     padding-block: 7rem;
-    border-bottom: 1px solid #d9ded4;
+    border-bottom: 1px solid #d5e1ec;
 }
 
 .section-heading {
@@ -119,7 +120,7 @@ h1 {
 h2 {
     max-width: 15ch;
     margin-bottom: 0;
-    font-size: clamp(2.5rem, 5vw, 4.75rem);
+    font-size: clamp(2.5rem, 5vw, 3.75rem);
     font-weight: 600;
     line-height: .98;
     letter-spacing: -.06em;
@@ -138,7 +139,7 @@ h2 {
 .outro > p {
     font-size: 1.0625rem;
     line-height: 1.65;
-    color: #526057;
+    color: #536779;
 }
 
 .section-copy p {
@@ -148,7 +149,7 @@ h2 {
 .steps {
     margin: 0;
     padding: 0;
-    border-top: 1px solid #ccd3c7;
+    border-top: 1px solid #c7d7e5;
     list-style: none;
 }
 
@@ -157,13 +158,13 @@ h2 {
     grid-template-columns: minmax(9rem, 1fr) minmax(0, 2fr);
     gap: 2rem;
     padding-block: 3rem;
-    border-bottom: 1px solid #ccd3c7;
+    border-bottom: 1px solid #c7d7e5;
 }
 
 .step-number {
     font-size: .75rem;
     font-weight: 700;
-    color: #657168;
+    color: #66798a;
     letter-spacing: .12em;
 }
 
@@ -196,7 +197,7 @@ h3 {
     gap: .25rem;
     margin-bottom: .75rem;
     padding: .25rem;
-    border: 1px solid #ccd3c7;
+    border: 1px solid #c7d7e5;
     border-radius: 999px;
     background: rgb(255 255 255 / 45%);
 }
@@ -206,20 +207,20 @@ h3 {
     padding: .7rem 1.1rem;
     border: 0;
     border-radius: 999px;
-    color: #526057;
+    color: #536779;
     background: transparent;
 }
 
 .integration-options button[aria-pressed = 'true'] {
-    color: #f3f5ee;
-    background: #17211b;
+    color: #fff;
+    background: #0072d1;
 }
 
 .integration-options button:focus-visible,
 .copy-button:focus-visible,
 .button:focus-visible,
 a:focus-visible {
-    outline: 3px solid #79e28e;
+    outline: 3px solid #ffe36e;
     outline-offset: 3px;
 }
 
@@ -231,25 +232,45 @@ a:focus-visible {
     min-height: 5rem;
     padding: 1rem 1rem 1rem 1.25rem;
     border-radius: 1rem;
-    background: #17211b;
+    background: #0a1c2e;
 }
 
 .code-block code {
-    overflow-x: auto;
-    padding-block: .5rem;
+    scrollbar-color: #56748c transparent;
+    scrollbar-width: thin;
+    overflow: auto hidden;
+    display: block;
+    min-width: 0;
+    block-size: 2.25rem;
+    padding-block: .375rem .5rem;
     font-size: .875rem;
-    color: #d8e0d6;
+    line-height: 1.25rem;
+    color: #dbe8f3;
     white-space: nowrap;
+}
+
+.code-block code::-webkit-scrollbar {
+    height: .25rem;
+}
+
+.code-block code::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.code-block code::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: #56748c;
 }
 
 .copy-button {
     cursor: pointer;
     flex: 0 0 auto;
+    min-inline-size: 5.25rem;
     padding: .65rem .9rem;
-    border: 1px solid #4b5a50;
+    border: 1px solid #3b5870;
     border-radius: .65rem;
-    color: #f3f5ee;
-    background: #27342c;
+    color: #fff;
+    background: #163149;
 }
 
 .why {
@@ -260,13 +281,13 @@ a:focus-visible {
     margin-block: 0 6rem;
     padding: clamp(2rem, 6vw, 5rem);
     border-radius: 1.5rem;
-    color: #f3f5ee;
-    background: #17211b;
+    color: #fff;
+    background: #071b2e;
 }
 
 .outro .eyebrow,
 .outro > p {
-    color: #aebbae;
+    color: #acc0d1;
 }
 
 .outro h2 {
@@ -291,22 +312,22 @@ a:focus-visible {
     border-radius: .75rem;
     font-size: .875rem;
     font-weight: 750;
-    color: #17211b;
+    color: #fff;
     text-decoration: none;
-    background: #79e28e;
+    background: #0072d1;
 }
 
 .text-link-light {
-    color: #d8e0d6;
+    color: #dbe8f3;
 }
 
 footer {
     display: flex;
     justify-content: space-between;
     padding-block: 2rem;
-    border-top: 1px solid #d9ded4;
+    border-top: 1px solid #d5e1ec;
     font-size: .875rem;
-    color: #657168;
+    color: #66798a;
 }
 
 @media (max-width: 42rem) {
